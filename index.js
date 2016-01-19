@@ -16,11 +16,6 @@ var initialize = function() {
     ]);
 };
 
-// initialize an empty Git repository
-var initRepo = function(results) {
-    return fs.initializeRepo();
-}
-
 // get the list of wiki pages from the server
 var getWikiPages = function() {
     return pmwiki.getWikiPages();
@@ -58,7 +53,6 @@ var finalizeRepo = function(results) {
 initialize()
     .then(getWikiPages)
     .then(getRevisions)
-    .then(initRepo)
     .then(commitRevisions)
     .then(finalizeRepo)
     .catch(function(error) {
