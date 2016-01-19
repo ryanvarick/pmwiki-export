@@ -10,16 +10,12 @@
 
 $RecipeInfo['Export']['Version'] = '2016-01-18';
 
-# ?action=export - Returns the version history of the current page
-$HandleActions['export'] = 'ExportAction';
-$HandleAuth['export'] = 'admin';
-
-# ?action=exportAll - Returns the list of wiki pages to export
-$HandleActions['exportAll'] = 'ExportAllAction';
-$HandleAuth['exportAll'] = 'admin';
+# Register ?action=export and ?action=exportAll
+$HandleActions['export'] = 'ExportActionHandler';
+$HandleActions['exportAll'] = 'ExportAllActionHandler';
 
  // mostly taken from `PrintDiff` in `scripts/pagerev.php`
-function ExportAction($pagename, $auth) {
+function ExportActionHandler($pagename, $auth) {
 
     // read the page and sort keys chronologically
     $page = ReadPage($pagename);
@@ -59,12 +55,11 @@ function ExportAction($pagename, $auth) {
     $response['page_name'] = $pagename;
     $response['versions'] = $versions;
     $response = json_encode($response);
-    // debugging
-    // error_log($pagename . ' length: ' . strlen($response) . ', last JSON error: ' . json_last_error_msg());
     echo $response;
 }
 
-function ExportAllAction($pagename, $auth) {
+// read and return the list of pages from `.pageindex`
+function ExportAllActionHandler($pagename, $auth) {
     global $PageListCacheDir, $PageIndexFile;
     $response = [];
     $index = getcwd() . $PageListCacheDir . '/' . $PageIndexFile;
@@ -81,7 +76,5 @@ function ExportAllAction($pagename, $auth) {
         error_log('Error opening $PageIndexFile.');
     }
     $response = json_encode($response);
-    // debugging
-    // error_log('Response length: ' . strlen($response));
     echo $response;
 }
