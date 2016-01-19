@@ -57,7 +57,7 @@ function ExportAction($pagename, $auth) {
 
     // finalize response
     $response['page_name'] = $pagename;
-    $response['revisions'] = $versions;
+    $response['versions'] = $versions;
     $response = json_encode($response);
     // debugging
     // error_log($pagename . ' length: ' . strlen($response) . ', last JSON error: ' . json_last_error_msg());
