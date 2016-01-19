@@ -18,6 +18,10 @@ var initialize = function() {
     ]);
 };
 
+var commitVersions = function(results) {
+    return db.selectVersions(fs.commitVersion);
+};
+
 var getVersions = function(pages) {
     console.log('Exporting %s of %s total wiki pages...', pages.filteredWikiPages.length, pages.allWikiPages.length);
     var allVersions = pages.filteredWikiPages.map(function(versions) {
@@ -41,10 +45,6 @@ var summarize = function() {
     return db.summarize();
 }
 
-var commitVersions = function(results) {
-    return db.selectVersions(fs.commitVersion);
-};
-
 initialize()
     .then(getWikiPages)
     .then(getVersions)
@@ -55,6 +55,6 @@ initialize()
         console.error(error.error);
     })
     .finally(function() {
-        var elapsedTime = ((Date.now() - _startTime) / 1000).toFixed(2);
+        var elapsedTime = ((Date.now() - _startTime) / 1000).toFixed(0);
         console.log('Export complete after', elapsedTime, 'seconds.');
     });
