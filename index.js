@@ -7,7 +7,10 @@ const db = require('./lib/db.js');
 const fs = require('./lib/fs.js');
 const pmwiki = require('./lib/pmwiki.js');
 
+var _startTime;
+
 var initialize = function() {
+    _startTime = Date.now();
     return new RSVP.all([
         fs.initialize(config),
         db.initialize(config),
@@ -27,7 +30,7 @@ var getVersions = function(pages) {
                     console.error(error.error);
                 });
     });
-    return RSVP.allSettled(allVersions);
+    return RSVP.all(allVersions);
 };
 
 var getWikiPages = function() {
@@ -38,11 +41,8 @@ var summarize = function() {
     return db.summarize();
 }
 
-// TODO: tally failures and successes
 var commitVersions = function(results) {
-    // db.size();
-    db.lineUp(); // TODO: Decompose this function and make it return a promise
-    // return <wathever>
+    return db.selectVersions(fs.commitVersion);
 };
 
 initialize()
@@ -55,5 +55,6 @@ initialize()
         console.error(error.error);
     })
     .finally(function() {
-        console.log('Done.');
+        var elapsedTime = ((Date.now() - _startTime) / 1000).toFixed(2);
+        console.log('Export complete after', elapsedTime, 'seconds.');
     });
