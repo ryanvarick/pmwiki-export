@@ -15,10 +15,6 @@ var initialize = function() {
     ]);
 };
 
-var getWikiPages = function() {
-    return pmwiki.getWikiPages();
-}
-
 var getVersions = function(pages) {
     console.log('Exporting %s of %s total wiki pages...', pages.filteredWikiPages.length, pages.allWikiPages.length);
     var allVersions = pages.filteredWikiPages.map(function(versions) {
@@ -27,15 +23,24 @@ var getVersions = function(pages) {
                 .then(fs.save)
                 .then(db.store)
                 .catch(function(error) {
-                    console.error(error);
+                    console.error(error.message);
+                    console.error(error.error);
                 });
     });
     return RSVP.allSettled(allVersions);
 };
 
+var getWikiPages = function() {
+    return pmwiki.getWikiPages();
+}
+
+var summarize = function() {
+    return db.summarize();
+}
+
 // TODO: tally failures and successes
 var commitVersions = function(results) {
-    db.size();
+    // db.size();
     db.lineUp(); // TODO: Decompose this function and make it return a promise
     // return <wathever>
 };
@@ -43,6 +48,7 @@ var commitVersions = function(results) {
 initialize()
     .then(getWikiPages)
     .then(getVersions)
+    .then(summarize)
     .then(commitVersions)
     .catch(function(error) {
         console.error(error.message);
