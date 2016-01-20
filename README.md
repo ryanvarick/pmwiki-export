@@ -1,6 +1,6 @@
 # PmWiki Export
 
-PmWiki Export works by using a Node script to communicate with a PmWiki cookbook recipe. The cookbook recipe exports PmWiki page history as a JSON object. The Node script retrieves the complete history for all pages, stores the history in a SQLite database, and "replays" each version chronologically in a new Git repository.
+[PmWiki Export](http://www.pmwiki.org/wiki/Cookbook/PmWikiExport) works by using a Node script to communicate with a PmWiki cookbook recipe. The cookbook recipe exports PmWiki page history as a JSON object. The Node script retrieves the complete history for all pages, stores the history in a SQLite database, and "replays" each version chronologically in a new Git repository.
 
 # Usage
 
