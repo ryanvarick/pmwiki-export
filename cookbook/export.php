@@ -29,7 +29,7 @@ function ExportActionHandler($pagename, $auth) {
     $version['source'] = utf8_encode($page['text']);
     array_push($versions, $version);
 
-    // then use page diffs to restore markup for older version
+    // use the page's diff keys to restore markup for older version
     foreach($page as $key => $value) {
         if(!preg_match("/^diff:(\d+):(\d+):?([^:]*)/", $key, $match)) continue;
 
@@ -40,12 +40,14 @@ function ExportActionHandler($pagename, $auth) {
         if(@$page[$match[0]] === '') continue;
         if(array_search($match[2], array_column($versions, 'timestamp'))) continue;
 
+        // metadata
         $diffgmt = $match[1];
         $diffauthor = @$page["author:$diffgmt"];
         if(!$diffauthor) @$diffauthor=$page["host:$diffgmt"];
         if(!$diffauthor) $diffauthor="unknown";
         $diffchangesum = PHSC(@$page["csum:$diffgmt"]);
 
+        // page version
         $version = [];
         $version['author'] = $diffauthor;
         $version['timestamp'] = $match[2];
