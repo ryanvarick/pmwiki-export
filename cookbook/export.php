@@ -33,8 +33,11 @@ function ExportActionHandler($pagename, $auth) {
     foreach($page as $key => $value) {
         if(!preg_match("/^diff:(\d+):(\d+):?([^:]*)/", $key, $match)) continue;
 
-        // ignore the original diff tag, which is is not a delta, and some rare dupes
+        // ignore the original diff tag, which is is not a delta
+        // ignore blank changes
+        // ignore some rare dupes
         if($match[1] === $match[2]) continue;
+        if(@$page[$match[0]] === '') continue;
         if(array_search($match[2], array_column($versions, 'timestamp'))) continue;
 
         $diffgmt = $match[1];
